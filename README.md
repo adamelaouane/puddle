@@ -1,0 +1,2 @@
+# puddle
+Django marketplace project
