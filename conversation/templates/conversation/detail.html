@@ -1,0 +1,116 @@
+
+{{% extends "core/base.html" %}
+
+{% block title %}Conversation{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-3 sm:px-4 py-5 sm:py-10">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-5 sm:mb-7">
+        <a href="{% url 'conversation:inbox' %}"
+           class="w-10 h-10 shrink-0 flex items-center justify-center
+                  rounded-xl bg-purple-100 text-purple-700
+                  hover:bg-purple-200 transition-colors">
+            ←
+        </a>
+
+        <div class="min-w-0 flex-1">
+            <h1 class="text-xl sm:text-2xl font-bold text-purple-950">
+                Conversation
+            </h1>
+            <p class="text-sm text-gray-500 truncate">
+                {{ conversation.item.name }}
+            </p>
+        </div>
+
+        {% if conversation.item.image %}
+        <img src="{{ conversation.item.image.url }}"
+             alt="{{ conversation.item.name }}"
+             class="w-12 h-12 sm:w-14 sm:h-14 object-contain
+                    bg-purple-50 rounded-xl p-1">
+        {% endif %}
+    </div>
+
+    <!-- Messages -->
+    <div class="bg-white border border-purple-100 rounded-2xl
+                shadow-sm overflow-hidden">
+
+        <div class="p-3 sm:p-6 space-y-4 sm:space-y-5
+                    min-h-64 max-h-[60vh] overflow-y-auto">
+
+            {% for message in messages %}
+            <div class="flex {% if message.created_by_id == request.user.id %}justify-end{% else %}justify-start{% endif %}">
+
+                <div class="max-w-[88%] sm:max-w-[75%] min-w-0">
+
+                    <p class="text-xs text-gray-400 mb-1
+                              {% if message.created_by_id == request.user.id %}text-right{% endif %}">
+                        {% if message.created_by_id == request.user.id %}
+                            You
+                        {% else %}
+                            {{ message.created_by.username }}
+                        {% endif %}
+                    </p>
+
+                    <div class="px-4 py-3 rounded-2xl break-words
+                                whitespace-pre-wrap text-sm sm:text-base
+                                leading-6
+                        {% if message.created_by_id == request.user.id %}
+                            bg-purple-700 text-white rounded-br-sm
+                        {% else %}
+                            bg-gray-100 text-gray-800 rounded-bl-sm
+                        {% endif %}">
+                        {{ message.content }}
+                    </div>
+
+                    <p class="mt-1 text-xs text-gray-400
+                              {% if message.created_by_id == request.user.id %}text-right{% endif %}">
+                        {{ message.created_at|date:"M d, Y · H:i" }}
+                    </p>
+
+                </div>
+            </div>
+            {% empty %}
+                <p class="text-center text-gray-400 py-10">
+                    No messages yet. Send the first message!
+                </p>
+            {% endfor %}
+
+        </div>
+
+        <!-- Reply form -->
+        <div class="border-t border-purple-100 bg-purple-50/50
+                    p-3 sm:p-5">
+
+            <form method="post" class="space-y-3">
+                {% csrf_token %}
+
+                {{ form.content }}
+
+                {% if form.content.errors %}
+                    <p class="text-sm text-red-600">
+                        {{ form.content.errors }}
+                    </p>
+                {% endif %}
+
+                <div class="flex justify-end">
+                    <button type="submit"
+                            class="w-full sm:w-auto px-6 py-3
+                                   rounded-xl bg-purple-700
+                                   hover:bg-purple-800 text-white
+                                   font-semibold transition-colors">
+                        Send Message ↗
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <p class="mt-4 text-center text-xs text-gray-400">
+        Keep your communication respectful and clear.
+    </p>
+
+</div>
+{% endblock %}

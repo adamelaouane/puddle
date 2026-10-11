@@ -1,0 +1,195 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-10 px-4">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Page heading -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">
+                My Profile
+            </h1>
+            <p class="text-gray-500 mt-2">
+                Manage your account and your products.
+            </p>
+        </div>
+
+        <!-- Profile information -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 mb-8">
+            <div class="flex flex-col sm:flex-row items-center gap-6">
+
+                <!-- Profile image -->
+                <div class="shrink-0">
+                    {% if user_profile.image %}
+                        <img
+                            src="{{ user_profile.image.url }}"
+                            alt="Profile picture"
+                            class="w-28 h-28 rounded-full object-cover border-4 border-purple-100"
+                        >
+                    {% else %}
+                        <div class="w-28 h-28 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 text-4xl font-bold">
+                            {{ profile_user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Username and email -->
+                <div class="text-center sm:text-left flex-1">
+                    <h2 class="text-2xl font-bold text-gray-900">
+                        {{ profile_user.username }}
+                    </h2>
+
+                    <p class="text-gray-500 mt-1">
+                        {{ profile_user.email|default:"No email added" }}
+                    </p>
+
+                    <p class="text-sm text-gray-400 mt-2">
+                        Member since {{ profile_user.date_joined|date:"F Y" }}
+                    </p>
+                </div>
+
+                <!-- Edit profile button -->
+                <a
+                    href="{% url 'core:edit_profile' %}"
+                    class="inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-xl transition duration-200"
+                >
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl mb-4">
+                    &#128230;
+                </div>
+                <p class="text-gray-500 text-sm">Total Products</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                    {{ total_products }}
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <div class="w-12 h-12 rounded-xl bg-green-100 text-green-700 flex items-center justify-center text-2xl mb-4">
+                    &#10003;
+                </div>
+                <p class="text-gray-500 text-sm">Sold Products</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                    {{ sold_products }}
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl mb-4">
+                    &#128221;
+                </div>
+                <p class="text-gray-500 text-sm">Available Products</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                        {{ available_products }}
+
+                </p>
+            </div>
+
+        </div>
+
+        <!-- User products -->
+        <div class="mb-6 flex items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">
+                    My Products
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">
+                    All products you have published.
+                </p>
+            </div>
+
+            <a
+                href="{% url 'item:new' %}"
+                class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-xl font-semibold transition text-sm"
+            >
+                + Add Product
+            </a>
+        </div>
+
+        {% if products %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                {% for item in products %}
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition duration-300">
+
+                        <!-- Product image -->
+                        <a href="{% url 'item:detail' item.id %}">
+                            {% if item.image %}
+                                <img
+                                    src="{{ item.image.url }}"
+                                    alt="{{ item.name }}"
+                                    class="w-full h-64 object-contain bg-gray-50 p-3"
+                                >
+                            {% else %}
+                                <div class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
+                                    No image available
+                                </div>
+                            {% endif %}
+                        </a>
+
+                        <div class="p-5">
+                            <div class="flex items-start justify-between gap-3">
+                                <h3 class="text-lg font-bold text-gray-900 line-clamp-1">
+                                    {{ item.name }}
+                                </h3>
+
+                                {% if item.is_sold %}
+                                    <span class="shrink-0 bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+                                        Sold
+                                    </span>
+                                {% else %}
+                                    <span class="shrink-0 bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">
+                                        Available
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <p class="text-purple-700 text-xl font-bold mt-3">
+                                {{ item.price }} MAD
+                            </p>
+
+                            <p class="text-gray-500 text-sm mt-2">
+                                Published {{ item.created_at|date:"d M Y" }}
+                            </p>
+
+                            <a
+                                href="{% url 'item:detail' item.id %}"
+                                class="block text-center mt-5 border border-purple-200 text-purple-700 hover:bg-purple-600 hover:text-white font-semibold py-2.5 rounded-xl transition"
+                            >
+                                View Product
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <div class="bg-white rounded-2xl border border-dashed border-gray-300 p-12 text-center">
+                <div class="text-5xl mb-4">&#128230;</div>
+                <h3 class="text-xl font-bold text-gray-900">
+                    No products yet
+                </h3>
+                <p class="text-gray-500 mt-2 mb-6">
+                    Start selling by publishing your first product.
+                </p>
+                <a
+                    href="{% url 'item:new' %}"
+                    class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-xl transition"
+                >
+                    Publish Your First Product
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

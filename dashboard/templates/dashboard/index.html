@@ -1,0 +1,245 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 px-4 py-10">
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Heading -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+                <p class="text-purple-600 font-semibold text-sm mb-2">
+                    SELLER CENTER
+                </p>
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                    My Dashboard
+                </h1>
+                <p class="text-gray-500 mt-2">
+                    Manage your products and track your sales.
+                </p>
+            </div>
+
+            <a href="{% url 'item:new' %}"
+               class="inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-xl transition">
+                + Add Product
+            </a>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+
+            <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+                <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-purple-100 text-purple-700 text-2xl mb-4">
+                    &#128230;
+                </div>
+                <p class="text-gray-500 text-sm">Total Products</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                    {{ total_products }}
+                </p>
+                <p class="text-gray-400 text-sm mt-2">
+                    All your published products
+                </p>
+            </div>
+
+            <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+                <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-green-100 text-green-700 text-2xl mb-4">
+                    &#10003;
+                </div>
+                <p class="text-gray-500 text-sm">Sold Products</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                    {{ sold_products }}
+                </p>
+                <p class="text-gray-400 text-sm mt-2">
+                    Products marked as sold
+                </p>
+            </div>
+
+            <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+                <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-100 text-blue-700 text-2xl mb-4">
+                    &#128221;
+                </div>
+                <p class="text-gray-500 text-sm">Available Products</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                    {{ available_products }}
+                </p>
+                <p class="text-gray-400 text-sm mt-2">
+                    Products still available
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Products section heading -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">
+                    My Products
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">
+                    Search and manage your listings.
+                </p>
+            </div>
+
+            <!-- Search form -->
+            <form method="GET" class="flex w-full md:w-auto gap-2">
+                <input
+                    type="search"
+                    name="query"
+                    value="{{ query }}"
+                    placeholder="Search your products..."
+                    class="w-full md:w-72 border border-gray-200 bg-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500"
+                >
+
+                <button
+                    type="submit"
+                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-3 rounded-xl transition"
+                >
+                    Search
+                </button>
+            </form>
+        </div>
+
+        <!-- Product list -->
+        {% if items %}
+            <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+
+                <!-- Desktop table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-500">
+                                    Product
+                                </th>
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-500">
+                                    Price
+                                </th>
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-500">
+                                    Status
+                                </th>
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-500">
+                                    Published
+                                </th>
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-500">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-gray-100">
+                            {% for item in items %}
+                                <tr class="hover:bg-purple-50/40 transition">
+
+                                    <!-- Product -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-4 min-w-56">
+                                            {% if item.image %}
+                                                <img
+                                                    src="{{ item.image.url }}"
+                                                    alt="{{ item.name }}"
+                                                    class="w-16 h-16 rounded-xl object-contain bg-gray-50 border border-gray-100"
+                                                >
+                                            {% else %}
+                                                <div class="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center text-xs text-gray-400">
+                                                    No image
+                                                </div>
+                                            {% endif %}
+
+                                            <div>
+                                                <a href="{% url 'item:detail' item.id %}"
+                                                   class="font-semibold text-gray-900 hover:text-purple-700">
+                                                    {{ item.name }}
+                                                </a>
+                                                <p class="text-xs text-gray-400 mt-1">
+                                                    ID: {{ item.id }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Price -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="font-semibold text-gray-900">
+                                            {{ item.price }} MAD
+                                        </span>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {% if item.is_sold %}
+                                            <span class="inline-flex bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                                                Sold
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                                                Available
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Date -->
+                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                        {{ item.created_at|date:"d M Y" }}
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <a
+                                                href="{% url 'item:edit' item.id %}"
+                                                class="text-purple-700 hover:text-purple-900 font-semibold text-sm"
+                                            >
+                                                Edit
+                                            </a>
+
+                                            <a
+                                                href="{% url 'item:delete' item.id %}"
+                                                class="text-red-600 hover:text-red-800 font-semibold text-sm"
+                                            >
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        {% else %}
+            <!-- Empty state -->
+            <div class="bg-white border border-dashed border-gray-300 rounded-2xl p-12 text-center">
+                <div class="text-5xl mb-4">&#128230;</div>
+
+                {% if query %}
+                    <h3 class="text-xl font-bold text-gray-900">
+                        No products found
+                    </h3>
+                    <p class="text-gray-500 mt-2 mb-6">
+                        No products match "{{ query }}". Try another search.
+                    </p>
+                    <a href="{% url 'dashboard:index' %}"
+                       class="inline-block border border-purple-200 text-purple-700 hover:bg-purple-50 font-semibold px-6 py-3 rounded-xl transition">
+                        Clear Search
+                    </a>
+                {% else %}
+                    <h3 class="text-xl font-bold text-gray-900">
+                        You haven't published any products yet
+                    </h3>
+                    <p class="text-gray-500 mt-2 mb-6">
+                        Publish your first product to start selling.
+                    </p>
+                    <a href="{% url 'item:new' %}"
+                       class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-xl transition">
+                        + Publish Your First Product
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,342 @@
+{% extends "core/base.html" %}
+
+{% block title %}Browse Items | Puddle{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-10">
+
+    <!-- Heading -->
+    <div class="mb-8">
+        <span class="text-sm font-semibold text-purple-700">
+            PUDDLE MARKETPLACE
+        </span>
+        <h1 class="mt-2 text-3xl md:text-4xl font-bold text-purple-950">
+            Explore Items
+        </h1>
+        <p class="mt-2 text-gray-500">
+            Find exactly what you're looking for.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Filters -->
+        <aside class="lg:col-span-1">
+            <form method="get"
+                  action="{% url 'item:items' %}"
+                  class="bg-white border border-purple-100 rounded-2xl p-6 shadow-sm">
+
+                <h2 class="text-xl font-bold text-purple-950 mb-5">
+                    Search & Filters
+                </h2>
+
+                <!-- Search -->
+                <label for="query"
+                       class="block text-sm font-semibold text-gray-700 mb-2">
+                    Search
+                </label>
+                <input
+                    id="query"
+                    type="text"
+                    name="query"
+                    value="{{ query }}"
+                    placeholder="Name or description..."
+                    class="w-full px-4 py-3 border border-purple-200 rounded-xl
+                           focus:ring-2 focus:ring-purple-500 outline-none"
+                >
+
+                <!-- Category -->
+                <label for="category"
+                       class="block text-sm font-semibold text-gray-700 mt-5 mb-2">
+                    Category
+                </label>
+                <select
+                    id="category"
+                    name="category"
+                    class="w-full px-4 py-3 border border-purple-200 rounded-xl
+                           bg-white focus:ring-2 focus:ring-purple-500 outline-none">
+
+                    <option value="">All categories</option>
+
+                    {% for category in categories %}
+                        <option value="{{ category.id }}"
+                            {% if category.id == category_id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <!-- Price range -->
+                <h3 class="text-sm font-semibold text-gray-700 mt-5 mb-2">
+                    Price Range (MAD)
+                </h3>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="min_price"
+                               class="block text-xs text-gray-500 mb-1">
+                            Minimum
+                        </label>
+                        <input
+                            id="min_price"
+                            type="number"
+                            name="min_price"
+                            min="0"
+                            step="0.01"
+                            value="{{ min_price }}"
+                            placeholder="0"
+                            class="w-full min-w-0 px-3 py-3 border
+                                   border-purple-200 rounded-xl outline-none
+                                   focus:ring-2 focus:ring-purple-500"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="max_price"
+                               class="block text-xs text-gray-500 mb-1">
+                            Maximum
+                        </label>
+                        <input
+                            id="max_price"
+                            type="number"
+                            name="max_price"
+                            min="0"
+                            step="0.01"
+                            value="{{ max_price }}"
+                            placeholder="1000"
+                            class="w-full min-w-0 px-3 py-3 border
+                                   border-purple-200 rounded-xl outline-none
+                                   focus:ring-2 focus:ring-purple-500"
+                        >
+                    </div>
+                </div>
+
+                <!-- Sorting -->
+                <label for="sort"
+                       class="block text-sm font-semibold text-gray-700 mt-5 mb-2">
+                    Sort By
+                </label>
+                <select
+                    id="sort"
+                    name="sort"
+                    class="w-full px-4 py-3 border border-purple-200 rounded-xl
+                           bg-white focus:ring-2 focus:ring-purple-500 outline-none">
+
+                    <option value="newest"
+                        {% if sort == 'newest' %}selected{% endif %}>
+                        Newest First
+                    </option>
+
+                    <option value="price_asc"
+                        {% if sort == 'price_asc' %}selected{% endif %}>
+                        Price: Low to High
+                    </option>
+
+                    <option value="price_desc"
+                        {% if sort == 'price_desc' %}selected{% endif %}>
+                        Price: High to Low
+                    </option>
+                </select>
+
+                <button
+                    type="submit"
+                    class="w-full mt-6 py-3 px-5 bg-purple-700 text-white
+                           font-semibold rounded-xl hover:bg-purple-800
+                           transition-all duration-300">
+                    Apply Filters
+                </button>
+
+                <a
+                    href="{% url 'item:items' %}"
+                    class="block text-center w-full mt-3 py-3 px-5
+                           border border-purple-200 text-purple-700
+                           font-semibold rounded-xl hover:bg-purple-50
+                           transition-all duration-300">
+                    Clear All Filters
+                </a>
+
+            </form>
+        </aside>
+
+        <!-- Results -->
+        <section class="lg:col-span-3">
+
+            <div class="flex flex-col sm:flex-row sm:items-center
+                        sm:justify-between gap-3 mb-6">
+
+                <div>
+                    <h2 class="text-2xl font-bold text-purple-950">
+                        Available Items
+                    </h2>
+                    <p class="text-sm text-gray-500 mt-1">
+                        {{ items.paginator.count }}
+                        item{{ items.paginator.count|pluralize }} found
+                    </p>
+                </div>
+
+                {% if query or category_id or min_price or max_price %}
+                    <span class="text-sm text-purple-700 bg-purple-50
+                                 px-3 py-2 rounded-lg">
+                        Filters applied
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                {% for item in items %}
+                    <a
+                        href="{% url 'item:detail' item.id %}"
+                        class="group block bg-white border border-purple-100
+                               rounded-2xl overflow-hidden shadow-sm
+                               hover:shadow-xl hover:border-purple-300
+                               hover:-translate-y-1 transition-all duration-300">
+
+                        <!-- Image -->
+                        <div class="h-56 bg-purple-50 flex items-center
+                                    justify-center p-4 overflow-hidden">
+
+                            {% if item.image %}
+                                <img
+                                    src="{{ item.image.url }}"
+                                    alt="{{ item.name }}"
+                                    class="w-full h-full object-contain
+                                           group-hover:scale-105
+                                           transition-transform duration-300">
+                            {% else %}
+                                <div class="text-center text-purple-300">
+                                    <span class="text-5xl">📦</span>
+                                    <p class="mt-2 text-sm">
+                                        No image available
+                                    </p>
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Information -->
+                        <div class="p-5">
+
+                            {% if item.category %}
+                                <span class="inline-block mb-3 px-3 py-1
+                                             bg-purple-50 text-purple-700
+                                             text-xs font-semibold rounded-full">
+                                    {{ item.category.name }}
+                                </span>
+                            {% endif %}
+
+                            <h3 class="text-lg font-bold text-purple-950
+                                       truncate group-hover:text-purple-700
+                                       transition-colors">
+                                {{ item.name }}
+                            </h3>
+
+                            <div class="mt-3 flex items-baseline gap-2">
+                                <span class="text-xl font-bold text-purple-700">
+                                    {{ item.price|floatformat:2 }}
+                                </span>
+                                <span class="text-sm font-semibold text-purple-700">
+                                    MAD
+                                </span>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100
+                                        flex items-center justify-between">
+                                <span class="text-sm text-gray-500">
+                                    View details
+                                </span>
+                                <span class="text-purple-700
+                                             group-hover:translate-x-1
+                                             transition-transform">
+                                    →
+                                </span>
+                            </div>
+
+                        </div>
+                    </a>
+
+                {% empty %}
+
+                    <!-- Empty State -->
+                    <div class="col-span-full bg-white border border-purple-100
+                                rounded-2xl p-10 md:p-14 text-center">
+
+                        <div class="w-20 h-20 mx-auto rounded-full bg-purple-50
+                                    flex items-center justify-center mb-5">
+                            <span class="text-4xl">🔎</span>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-purple-950">
+                            No items found
+                        </h3>
+
+                        <p class="mt-3 text-gray-500 max-w-md mx-auto leading-7">
+                            We couldn't find any items matching your search.
+                            Try changing your keywords, category, or price range.
+                        </p>
+
+                        <a
+                            href="{% url 'item:items' %}"
+                            class="inline-block mt-6 px-6 py-3 bg-purple-700
+                                   text-white font-semibold rounded-xl
+                                   hover:bg-purple-800 transition-all duration-300">
+                            Clear Filters
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- Pagination -->
+            {% if items.paginator.num_pages > 1 %}
+                <nav aria-label="Pagination"
+                     class="flex flex-wrap items-center justify-center
+                            gap-2 mt-10">
+
+                    {% if items.has_previous %}
+                        <a
+                            href="?query={{ query|urlencode }}&category={{ category_id|default_if_none:'' }}&min_price={{ min_price|urlencode }}&max_price={{ max_price|urlencode }}&sort={{ sort }}&page={{ items.previous_page_number }}"
+                            class="px-4 py-2 rounded-xl border border-purple-200
+                                   text-purple-700 hover:bg-purple-50">
+                            ← Previous
+                        </a>
+                    {% endif %}
+
+                    {% for page_num in items.paginator.page_range %}
+                        {% if page_num == items.number %}
+                            <span aria-current="page"
+                                  class="px-4 py-2 rounded-xl bg-purple-700
+                                         text-white font-semibold">
+                                {{ page_num }}
+                            </span>
+                        {% else %}
+                            <a
+                                href="?query={{ query|urlencode }}&category={{ category_id|default_if_none:'' }}&min_price={{ min_price|urlencode }}&max_price={{ max_price|urlencode }}&sort={{ sort }}&page={{ page_num }}"
+                                class="px-4 py-2 rounded-xl border
+                                       border-purple-100 text-gray-700
+                                       hover:bg-purple-50 hover:text-purple-700">
+                                {{ page_num }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if items.has_next %}
+                        <a
+                            href="?query={{ query|urlencode }}&category={{ category_id|default_if_none:'' }}&min_price={{ min_price|urlencode }}&max_price={{ max_price|urlencode }}&sort={{ sort }}&page={{ items.next_page_number }}"
+                            class="px-4 py-2 rounded-xl border border-purple-200
+                                   text-purple-700 hover:bg-purple-50">
+                            Next →
+                        </a>
+                    {% endif %}
+
+                </nav>
+            {% endif %}
+
+        </section>
+    </div>
+</div>
+{% endblock %}
+

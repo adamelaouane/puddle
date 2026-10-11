@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %} | Puddle</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #ddd6fe;
+        border-radius: 12px;
+        background-color: white;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px #ede9fe;
+    }
+
+    .errorlist {
+        margin-top: 8px;
+        color: #dc2626;
+        font-size: 14px;
+        list-style: none;
+    }
+</style>
+
+
+</head>
+
+
+<body class="bg-purple-50 text-gray-900">
+
+    <!-- ==================== NAVBAR ==================== -->
+
+<nav id="main-navbar"
+     class="px-4 sm:px-6 lg:px-8 py-3
+            flex flex-nowrap justify-between items-center gap-5
+            bg-white/95 backdrop-blur-md
+            border-b border-purple-100 shadow-sm
+            sticky top-0 z-50">
+
+    <!-- Logo -->
+    <a href="/"
+       class="shrink-0 text-2xl font-bold text-purple-700
+              hover:text-purple-800 transition">
+        Puddle
+    </a>
+
+    <!-- Navigation -->
+    <div class="flex flex-nowrap items-center gap-3 sm:gap-5
+                overflow-x-auto whitespace-nowrap">
+
+        <a href="{% url 'item:new' %}"
+           class="shrink-0 text-sm sm:text-base font-semibold
+                  text-gray-700 hover:text-purple-700 transition">
+            New item
+        </a>
+
+        <a href="{% url 'item:items' %}"
+           class="shrink-0 text-sm sm:text-base font-semibold
+                  text-gray-700 hover:text-purple-700 transition">
+            Browse
+        </a>
+
+        {% if request.user.is_authenticated %}
+
+            <a href="{% url 'conversation:inbox' %}"
+               class="shrink-0 text-sm sm:text-base font-semibold
+                      text-gray-700 hover:text-purple-700 transition">
+                Inbox
+            </a>
+
+            <a href="{% url 'dashboard:index' %}"
+               class="shrink-0 text-sm sm:text-base font-semibold
+                      text-gray-700 hover:text-purple-700 transition">
+                Dashboard
+            </a>
+
+            <!-- Logout Form -->
+            <form method="post" action="{% url 'logout' %}"
+                  class="shrink-0 flex items-center">
+                {% csrf_token %}
+
+                <button type="submit"
+                        class="px-3 sm:px-5 py-2
+                               text-sm sm:text-base font-semibold
+                               bg-purple-700 text-white rounded-xl
+                               hover:bg-purple-800 transition shadow-sm">
+                    Log Out
+                </button>
+            </form>
+
+            <!-- Profile Image -->
+            <a href="{% url 'core:profile' %}"
+               class="shrink-0 flex items-center justify-center
+                      rounded-full hover:ring-4 hover:ring-purple-100
+                      transition"
+               title="My Profile">
+
+                {% if request.user.profile.image %}
+                    <img src="{{ request.user.profile.image.url }}"
+                         alt="My Profile"
+                         class="w-10 h-10 sm:w-11 sm:h-11
+                                rounded-full object-cover
+                                border-2 border-purple-500 block">
+                {% else %}
+                    <div class="w-10 h-10 sm:w-11 sm:h-11
+                                rounded-full bg-purple-600 text-white
+                                flex items-center justify-center
+                                font-bold text-lg">
+                        {{ request.user.username|first|upper }}
+                    </div>
+                {% endif %}
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'core:signup' %}"
+               class="shrink-0 px-4 py-2 text-sm sm:text-base
+                      font-semibold bg-purple-700 text-white rounded-xl
+                      hover:bg-purple-800 transition">
+                Sign Up
+            </a>
+
+            <a href="{% url 'core:login' %}"
+               class="shrink-0 px-4 py-2 text-sm sm:text-base
+                      font-semibold bg-white text-purple-700
+                      border border-purple-700 rounded-xl
+                      hover:bg-purple-50 transition">
+                Log In
+            </a>
+
+        {% endif %}
+
+    </div>
+</nav>
+
+
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+
+    <main class="min-h-screen">
+
+        <div class="px-6 py-10">
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
+
+    </main>
+
+
+
+    <!-- ==================== FOOTER ==================== -->
+
+    <footer class="bg-purple-950 text-white">
+
+        <div class="px-8 py-12 flex justify-between">
+
+            <!-- About -->
+
+            <div class="w-2/3 pr-16">
+
+                <h3 class="mb-5 font-bold text-2xl text-white">
+
+                    About Puddle
+
+                </h3>
+
+
+                <p class="text-lg text-purple-200
+                          leading-relaxed max-w-2xl">
+
+                    Puddle is a simple and trusted marketplace where
+                    you can discover great products, sell items you no
+                    longer need, and connect with people in your community.
+
+                    Our goal is to make buying and selling online simple,
+                    safe, and accessible to everyone.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- Quick Links -->
+
+          <div> <h3 class="text-white text-lg font-bold mb-4"> Quick Links </h3> <ul class="space-y-3"> <li> <a href="{% url 'core:about' %}" class="text-purple-200 hover:text-white transition"> About Us </a> </li> <li> <a href="{% url 'core:contact' %}" class="text-purple-200 hover:text-white transition"> Contact Us </a> </li> <li> <a href="{% url 'core:privacy' %}" class="text-purple-200 hover:text-white transition"> Privacy Policy </a> </li> <li> <a href="{% url 'core:terms' %}" class="text-purple-200 hover:text-white transition"> Terms of Use </a> </li> </ul> </div>
+
+
+
+        <!-- Bottom Footer -->
+
+        <div class="border-t border-purple-800
+                    px-8 py-5
+                    flex justify-between items-center">
+
+            <p class="text-sm text-purple-300">
+
+                © 2026 Puddle. All rights reserved.
+
+            </p>
+
+
+            <p class="text-sm text-purple-300">
+
+                Buy • Sell • Connect
+
+            </p>
+
+        </div>
+
+    </footer>
+
+
+</body>
+</html>

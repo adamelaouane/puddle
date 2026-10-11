@@ -1,0 +1,92 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto mt-8 mb-12 px-4">
+
+    <!-- Form Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-purple-950">
+            {{ title }}
+        </h1>
+
+        <p class="mt-3 text-gray-500 text-lg">
+            Fill in the information below to continue.
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl border border-purple-100 shadow-sm p-6 md:p-10">
+
+        <form method="post" action="." enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- General Form Errors -->
+            {% if form.non_field_errors %}
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+                    {% for error in form.non_field_errors %}
+                        <p class="text-sm">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="space-y-6">
+
+                {% for field in form %}
+                    <div>
+                        <!-- Field Label -->
+                        <label for="{{ field.id_for_label }}"
+                               class="block mb-2 font-semibold text-purple-950">
+                            {{ field.label }}
+
+                            {% if field.field.required %}
+                                <span class="text-red-500">*</span>
+                            {% endif %}
+                        </label>
+
+                        <!-- Field Input -->
+                        {{ field }}
+
+                        <!-- Help Text -->
+                        {% if field.help_text %}
+                            <p class="mt-2 text-sm text-gray-500">
+                                {{ field.help_text }}
+                            </p>
+                        {% endif %}
+
+                        <!-- Field Errors -->
+                        {% for error in field.errors %}
+                            <p class="mt-2 text-sm text-red-600">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-4">
+
+                <button type="submit"
+                        class="inline-flex justify-center items-center py-3 px-8 text-lg font-semibold bg-purple-700 text-white rounded-xl shadow-sm hover:bg-purple-800 hover:shadow-lg transition-all duration-300">
+                    Submit
+                </button>
+
+                <a href="javascript:history.back()"
+                   class="inline-flex justify-center items-center py-3 px-8 text-lg font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-xl hover:bg-purple-100 transition-all duration-300">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

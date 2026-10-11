@@ -1,0 +1,134 @@
+
+{% extends "core/base.html" %}
+
+{% block title %}Privacy Policy | Puddle{% endblock %}
+
+{% block content %}
+<div class="bg-purple-50 min-h-screen py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                <span class="text-3xl">🔒</span>
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-bold text-purple-950 mb-5">
+                Privacy Policy
+            </h1>
+
+            <p class="text-gray-600 text-lg">
+                Your privacy matters to us.
+            </p>
+        </div>
+
+        <!-- Content -->
+        <div class="bg-white rounded-3xl border border-purple-100 shadow-sm p-6 md:p-10 space-y-9">
+
+            <section>
+                <h2 class="text-xl font-bold text-purple-900 mb-3">
+                    1. Introduction
+                </h2>
+                <p class="text-gray-600 leading-8">
+                    This Privacy Policy explains how Puddle may collect,
+                    use, and protect information when you use our
+                    marketplace. By using the platform, you acknowledge
+                    the practices described on this page.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-purple-900 mb-3">
+                    2. Information We Collect
+                </h2>
+                <p class="text-gray-600 leading-8 mb-3">
+                    Depending on the features you use, Puddle may process
+                    information such as:
+                </p>
+                <ul class="list-disc pl-6 space-y-2 text-gray-600 leading-7">
+                    <li>Account information, such as your username and email address, if provided.</li>
+                    <li>Product information, including descriptions, prices, and uploaded images.</li>
+                    <li>Messages you send through conversations on the platform.</li>
+                    <li>Technical information required to operate and secure the website.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-purple-900 mb-3">
+                    3. How We Use Information
+                </h2>
+                <p class="text-gray-600 leading-8 mb-3">
+                    Information may be used to:
+                </p>
+                <ul class="list-disc pl-6 space-y-2 text-gray-600 leading-7">
+                    <li>Create and manage user accounts.</li>
+                    <li>Display marketplace listings.</li>
+                    <li>Enable communication between users.</li>
+                    <li>Maintain the security and functionality of the website.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-purple-900 mb-3">
+                    4. Sharing Information
+                </h2>
+                <p class="text-gray-600 leading-8">
+                    Information you publish, such as your username and
+                    product listings, may be visible to other users.
+                    Messages may be accessible to the participants in a
+                    conversation. Avoid including sensitive personal
+                    information in public listings or messages.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-purple-900 mb-3">
+                    5. Data Security
+                </h2>
+                <p class="text-gray-600 leading-8">
+                    We aim to use appropriate measures to protect
+                    information processed by the platform. However, no
+                    website or method of electronic storage can guarantee
+                    absolute security.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-purple-900 mb-3">
+                    6. Your Choices
+                </h2>
+                <p class="text-gray-600 leading-8">
+                    Please keep your account credentials private and
+                    contact the website administrator if you have
+                    questions about your account or personal information.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-purple-900 mb-3">
+                    7. Contact Us
+                </h2>
+                <p class="text-gray-600 leading-8">
+                    If you have questions about this Privacy Policy,
+                    please contact us through our contact page.
+                </p>
+
+                <a href="{% url 'core:contact' %}"
+                   class="inline-block mt-4 text-purple-700 font-semibold hover:text-purple-900 transition">
+                    Contact Us →
+                </a>
+            </section>
+
+            <div class="border-t border-purple-100 pt-6">
+                <p class="text-sm text-gray-500 leading-6">
+                    Note: This page is a starting template for the Puddle
+                    project. It should be reviewed and adapted to the
+                    actual data practices of the website before public use.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
