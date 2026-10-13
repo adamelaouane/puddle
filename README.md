@@ -17,30 +17,48 @@ This project was built to develop practical skills in backend development, datab
 * **Product Details** — View product information and related items.
 * **Seller Dashboard** — Manage personal listings.
 * **Messaging System** — Conversations between buyers and sellers.
-* **Image Storage** — Cloudinary integration for product images.
-* **Database Integration** — SQLite for local development and PostgreSQL support for deployment.
+* **Image Storage** — Cloudinary integration for image storage.
+* **Database Integration** — SQLite for local development and PostgreSQL support.
 * **Responsive UI** — Interface styled with Tailwind CSS.
+
+## Screenshots
+
+<!-- Add screenshots to the screenshots/ directory and uncomment these lines. -->
+
+<!--
+### Homepage
+![Puddle Homepage](screenshots/homepage.png)
+
+### Product Details
+![Product Details](screenshots/product-detail.png)
+
+### Seller Dashboard
+![Seller Dashboard](screenshots/dashboard.png)
+
+### Messaging
+![Buyer-Seller Messaging](screenshots/messaging.png)
+-->
 
 ## Tech Stack
 
-| Technology          | Purpose                           |
-| ------------------- | --------------------------------- |
-| Python              | Programming language              |
-| Django              | Backend web framework             |
-| Django ORM          | Database operations               |
-| SQLite / PostgreSQL | Data persistence                  |
-| HTML                | Page structure                    |
-| Tailwind CSS        | Styling and responsive design     |
-| Cloudinary          | Image storage                     |
-| WhiteNoise          | Static file serving configuration |
-| Git & GitHub        | Version control                   |
+| Technology          | Purpose                       |
+| ------------------- | ----------------------------- |
+| Python              | Programming language          |
+| Django              | Backend web framework         |
+| Django ORM          | Database operations           |
+| SQLite / PostgreSQL | Data persistence              |
+| HTML                | Page structure                |
+| Tailwind CSS        | Styling and responsive design |
+| Cloudinary          | Image storage                 |
+| WhiteNoise          | Static file serving           |
+| Git & GitHub        | Version control               |
 
 ## Project Structure
 
 ```text
 puddle/
 ├── puddle/          # Project configuration and root URLs
-├── core/            # Main pages, contact page and shared functionality
+├── core/            # Main pages and shared functionality
 ├── dashboard/       # User dashboard
 ├── item/            # Product listings, categories and search
 ├── conversation/    # Buyer-seller messaging
@@ -55,8 +73,8 @@ puddle/
 
 * Python 3.11+
 * Git
-* A Cloudinary account for image uploads
-* PostgreSQL connection string if using PostgreSQL instead of SQLite
+* Cloudinary credentials for image uploads
+* A PostgreSQL connection string if using PostgreSQL
 
 ### 1. Clone the repository
 
@@ -82,19 +100,17 @@ python -m pip install -r requirements.txt
 
 ### 4. Configure environment variables
 
-Set your configuration in PowerShell. Use your own Cloudinary credentials and keep secrets private.
+Set your own values in PowerShell. Never publish real credentials.
 
 ```powershell
 $env:DEBUG = "True"
-$env:DJANGO_SECRET_KEY = "your-local-development-secret"
+$env:DJANGO_SECRET_KEY = "replace-with-a-local-development-secret"
 $env:CLOUDINARY_CLOUD_NAME = "your-cloud-name"
 $env:CLOUDINARY_API_KEY = "your-api-key"
 $env:CLOUDINARY_API_SECRET = "your-api-secret"
 ```
 
-To use PostgreSQL, also configure `DATABASE_URL` with your own connection string. If it is not set, the project configuration falls back to SQLite.
-
-Never commit API secrets, database credentials, or production secret keys to GitHub.
+If you want to use PostgreSQL, configure `DATABASE_URL` with your own connection string. Otherwise, the project can use SQLite if the settings are configured for that fallback.
 
 ### 5. Apply database migrations
 
@@ -118,10 +134,10 @@ Open http://127.0.0.1:8000/ in your browser.
 
 ## Configuration Notes
 
-* Environment variables must be configured again when opening a new PowerShell session.
-* PostgreSQL is intended for persistent hosted data.
-* Cloudinary credentials are required for image uploads when using the configured Cloudinary storage backend.
-* Production deployment requires appropriate secret-key, host, database, and static-file settings.
+* Configure environment variables again when opening a new terminal session, unless you use a persistent environment configuration.
+* PostgreSQL can be used for hosted database persistence.
+* Cloudinary credentials are required for uploads when Cloudinary storage is enabled.
+* Production deployment requires suitable secret-key, host, database, and static-file settings.
 
 ## Future Improvements
 
@@ -129,7 +145,7 @@ Open http://127.0.0.1:8000/ in your browser.
 * Improve product filtering and sorting.
 * Add pagination for product listings.
 * Enhance form validation and error handling.
-* Complete production deployment and document the live application.
+* Deploy the application and document the live demo.
 
 ## Author
 
